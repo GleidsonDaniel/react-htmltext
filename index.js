@@ -9,12 +9,8 @@ import { addons, View, Text, StyleSheet, Platform, Image } from 'react-native';
 import entities from 'entities';
 import htmlparser from 'htmlparser2';
 
-import InstagramEmbed from 'react-native-instagram-embed';
-
 const baseFontStyle = {
-  fontSize: 16,
-  fontFamily: 'HelveticaNeue',
-  lineHeight: 22,
+  fontSize: 14,
 };
 const paragraphStyle = { ...baseFontStyle };
 const boldStyle = { ...baseFontStyle, fontWeight: '500' };
@@ -102,7 +98,8 @@ export default class HTMLText extends PureComponent {
           <Text
             key={index}
             style={parent ? this.props.styles[parent.name] : null}
-            {...this.props.textProps}>
+            {...this.props.textProps}
+          >
             {entities.decodeHTML(node.data)}
           </Text>
         );
@@ -125,21 +122,6 @@ export default class HTMLText extends PureComponent {
           };
         }
 
-        const instagramRegex = /instagram\.com\/p\/([a-zA-Z0-9]+)/g;
-        if (
-          Platform.OS != 'android' &&
-          instagramRegex.test(node.attribs.href)
-        ) {
-          const { width } = this.props.style;
-
-          return (
-            <InstagramEmbed
-              url={node.attribs.href}
-              style={[{ height: 240 }, width ? { width } : {}]}
-            />
-          );
-        }
-
         if (node.name == 'img') {
           const { src, width, height } = node.attribs;
           return (
@@ -158,7 +140,8 @@ export default class HTMLText extends PureComponent {
             <Text
               key={index}
               style={this.props.styles.li}
-              {...this.props.textProps}>
+              {...this.props.textProps}
+            >
               {'\n'}
               {'•'} {this._domToElement(node.children, node)}
               {index === list.length - 1 && '\n'}
@@ -177,7 +160,8 @@ export default class HTMLText extends PureComponent {
                 ? this.props.styles.p
                 : null
             }
-            {...this.props.textProps}>
+            {...this.props.textProps}
+          >
             {this._domToElement(node.children, node)}
           </Text>
         );
@@ -208,13 +192,7 @@ export default class HTMLText extends PureComponent {
   render() {
     if (this.state.element) {
       const { style } = this.props;
-      return (
-        <View
-          children={this.state.element}
-          onLayout={this._onLayout}
-          style={style}
-        />
-      );
+      return <>{this.state.element}</>;
     }
 
     return <Text />;
